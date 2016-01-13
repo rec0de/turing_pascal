@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 557
   Top = 219
   Width = 737
-  Height = 559
+  Height = 544
   Caption = 'TSIM'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,6 +20,34 @@ object Form1: TForm1
     Height = 25
     AutoSize = False
     Caption = 'Step Delay: 5ms'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Arial'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 8
+    Top = 160
+    Width = 209
+    Height = 25
+    AutoSize = False
+    Caption = 'Steps: 0'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Arial'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label3: TLabel
+    Left = 8
+    Top = 184
+    Width = 209
+    Height = 33
+    AutoSize = False
+    Caption = 'State:'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -212,26 +240,12 @@ object Form1: TForm1
     TabOrder = 12
     OnClick = Button3Click
   end
-  object CheckBox1: TCheckBox
-    Left = 16
-    Top = 160
-    Width = 137
-    Height = 41
-    Caption = 'Custom Band Data'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -27
-    Font.Name = 'Arial'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 13
-  end
   object StringGrid1: TStringGrid
     Left = 0
     Top = 216
     Width = 721
     Height = 265
-    TabOrder = 14
+    TabOrder = 13
   end
   object Button1: TButton
     Left = 504
@@ -245,7 +259,7 @@ object Form1: TForm1
     Font.Name = 'Arial'
     Font.Style = []
     ParentFont = False
-    TabOrder = 15
+    TabOrder = 14
     OnClick = Button1Click
   end
   object TrackBar1: TTrackBar
@@ -258,25 +272,38 @@ object Form1: TForm1
     Min = 5
     ParentCtl3D = False
     Position = 5
-    TabOrder = 16
+    TabOrder = 15
     OnChange = TrackBar1Change
   end
   object Edit1: TEdit
     Left = 0
     Top = 480
-    Width = 609
-    Height = 41
+    Width = 513
+    Height = 25
     AutoSize = False
-    TabOrder = 17
-    Text = 'Edit1'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Arial'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 16
+    Text = 'DTM Band Data'
   end
   object Button4: TButton
-    Left = 608
+    Left = 512
     Top = 480
-    Width = 113
-    Height = 41
-    Caption = 'Apply'
-    TabOrder = 18
+    Width = 209
+    Height = 25
+    Caption = 'Restart with custom band'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Arial'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 17
+    OnClick = Button4Click
   end
   object OpenDialog1: TOpenDialog
     Left = 216
@@ -284,6 +311,7 @@ object Form1: TForm1
   end
   object Timer1: TTimer
     Enabled = False
+    Interval = 5
     OnTimer = Timer1Timer
     Left = 216
     Top = 72

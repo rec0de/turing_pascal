@@ -22,7 +22,6 @@ type
     Panel11: TPanel;
     Button3: TButton;
     OpenDialog1: TOpenDialog;
-    CheckBox1: TCheckBox;
     StringGrid1: TStringGrid;
     Timer1: TTimer;
     Button1: TButton;
@@ -30,11 +29,14 @@ type
     Label1: TLabel;
     Edit1: TEdit;
     Button4: TButton;
+    Label2: TLabel;
+    Label3: TLabel;
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure TrackBar1Change(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -52,6 +54,7 @@ var
   alphabet: Array of string;
   states: Array of string;
   qdata: Array of Array of Array of string;
+  steps: integer;
 
 implementation
 
@@ -219,6 +222,8 @@ end;
 
 Procedure viz();
 begin
+  Form1.Label2.Caption := 'Steps: '+inttostr(steps);
+  Form1.Label3.Caption := 'State: '+state;
   Fill_Grid(Form1.StringGrid1);
   Form1.Panel1.caption := GetBand(headpos-4);
   Form1.Panel2.caption := GetBand(headpos-3);
@@ -236,17 +241,28 @@ Procedure accept();
 begin
   Form1.Panel11.caption := 'Input accepted!';
   Form1.Panel11.color := $0000ff00;
+
+  // Pause simulation
+  Form1.Timer1.enabled := false;
+  Form1.Button1.Caption := 'Play';
 end;
 
 Procedure halt();
 begin
   Form1.Panel11.caption := 'Machine halted.';
   Form1.Panel11.color := $000000ff;
+
+  // Pause simulation
+  Form1.Timer1.enabled := false;
+  Form1.Button1.Caption := 'Play';
 end;
 
 Function q() : String;
 var i_state, read: integer;
 begin
+
+  // Increment step count
+  steps := steps + 1;
 
   // Update visualization
   viz();
@@ -297,11 +313,13 @@ begin
   end;
 end;
 
+// Do single step
 procedure TForm1.Button2Click(Sender: TObject);
 begin
   q();
 end;
 
+// Import DTM
 procedure TForm1.Button3Click(Sender: TObject);
 var rawdata: TStringList; alpha, buffer: string; i, j, a: integer; data: array of string;
 begin
@@ -314,11 +332,12 @@ begin
       // Reset headpos to 0
       headpos := 0;
 
+      // Reset steps
+      steps := 0;
+
       // Reset UI
       Form1.Panel11.caption := 'Running...';
       Form1.Panel11.color := $00cccccc;
-
-
 
       // Clear Band, States, Alphabet & Q Function
       SetLength(band, 0);
@@ -328,6 +347,9 @@ begin
 
       // Write first line of file to band without modification
       LoadBand(rawdata[0]);
+
+      // Write band to edit
+      Form1.Edit1.text := rawdata[0];
 
       ////////////////////////////////////////
       // Build Alphabet Normalization Table //
@@ -367,7 +389,7 @@ begin
       alpha := rawdata[2];
       buffer := '';
 
-      a := 0; // Alphabet table index
+      a := 0; // state table index
 
       For i := 1 to Length(alpha) do begin
         If alpha[i] = '$' then begin
@@ -392,6 +414,7 @@ begin
 
       // Get starting state
       state := rawdata[3]; // State is normalized in q function
+      s_start := state;
 
       // Get accepting state
       s_accepting := rawdata[4];
@@ -427,14 +450,6 @@ begin
         Setq(data[0], data[1], data[2], data[3], data[4]);
       end;
 
-      ////////////////////////
-      // Analyze q function //
-      ////////////////////////
-
-      ///////////////////////////////////////
-      // Validate Band data using alphabet //
-      ///////////////////////////////////////
-
       // Update GUI
       viz();
     end
@@ -444,6 +459,7 @@ begin
   end;
 end;
 
+// Pause / Play simulation
 procedure TForm1.Button1Click(Sender: TObject);
 begin
   if Form1.Timer1.enabled then begin
@@ -456,15 +472,42 @@ begin
   end;
 end;
 
+// Do single step
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
   q();
 end;
 
+// Update simulation delay
 procedure TForm1.TrackBar1Change(Sender: TObject);
 begin
   Form1.Label1.Caption := 'Step Delay: '+Inttostr(TrackBar1.Position)+'ms';
   Form1.Timer1.Interval := TrackBar1.Position;
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+  // Reset headpos to 0
+  headpos := 0;
+
+  // Reset steps
+  steps := 0;
+
+  // Reset UI
+  Form1.Panel11.caption := 'Running...';
+  Form1.Panel11.color := $00cccccc;
+
+  // Clear Band
+  SetLength(band, 0);
+
+  // Return to start state
+  state := s_start;
+
+  // Load new band
+  LoadBand(Form1.Edit1.Text);
+
+  // Update GUI
+  viz();
 end;
 
 end.
